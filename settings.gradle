@@ -1,0 +1,3 @@
+rootProject.name = 'AeroLite'
+include 'server'
+include 'web'
