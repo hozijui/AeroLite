@@ -1,2 +1,23 @@
+plugins {
+  id 'com.github.node-gradle.node' version '3.2.0'
+}
+
+node {
+  download = false
+}
+
 group 'cn.cdipcc.aerolite'
 version '0.0.1-SNAPSHOT'
+
+task build(type: YarnTask) {
+  group = 'web'
+  dependsOn 'clean'
+  args = ['run', 'build']
+}
+
+task clean {
+  group = 'web'
+  doFirst {
+    delete 'build'
+  }
+}

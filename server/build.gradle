@@ -37,3 +37,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.named('build') {
+    processResources.dependsOn ':web:build'
+    sourceSets.main.resources.srcDirs '../web/build'
+}
