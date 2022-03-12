@@ -10,6 +10,7 @@ import i18n from './locales'
 import { VueAxios } from './utils/request'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 
+// import './mock'
 import bootstrap from './core/bootstrap'
 import './core/lazy_use' // use lazy load components
 import './permission' // permission control

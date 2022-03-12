@@ -13,28 +13,28 @@ const request = axios.create({
 })
 
 // 异常拦截处理器
-const errorHandler = (error) => {
+const errorHandler = async (error) => {
   if (error.response) {
     const data = error.response.data
-    // 从 localstorage 获取 token
-    const token = storage.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
-        description: data.message
+        description: data.msg
       })
+      return Promise.resolve()
     }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
-      notification.error({
-        message: 'Unauthorized',
-        description: 'Authorization verification failed'
-      })
+    if (error.response.status === 401 && data.code === 4012) {
+      await store.dispatch('RefreshToken')
+      const token = storage.get(ACCESS_TOKEN)
       if (token) {
+        return request(error.config)
+      } else {
         store.dispatch('Logout').then(() => {
           setTimeout(() => {
             window.location.reload()
           }, 1500)
         })
+        return Promise.resolve()
       }
     }
   }
@@ -44,10 +44,8 @@ const errorHandler = (error) => {
 // request interceptor
 request.interceptors.request.use(config => {
   const token = storage.get(ACCESS_TOKEN)
-  // 如果 token 存在
-  // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
-    config.headers['Access-Token'] = token
+    config.headers['Authorization'] = `Bearer ${token}`
   }
   return config
 }, errorHandler)

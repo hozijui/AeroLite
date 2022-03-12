@@ -1,7 +1,7 @@
 <template>
   <a-dropdown v-if="currentUser && currentUser.name" placement="bottomRight">
     <span class="ant-pro-account-avatar">
-      <a-avatar size="small" src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" class="antd-pro-global-header-index-avatar" />
+      <a-avatar size="small" :src="require('@/assets/avatar.png')" class="antd-pro-global-header-index-avatar" />
       <span>{{ currentUser.name }}</span>
     </span>
     <template v-slot:overlay>
@@ -10,7 +10,7 @@
           <a-icon type="setting" />
           {{ $t('menu.settings') }}
         </a-menu-item>
-        <a-menu-item key="admin" @click="handleToAdmin">
+        <a-menu-item v-if="isAdmin" key="admin" @click="handleToAdmin">
           <a-icon type="tool" />
           {{ $t('menu.admin') }}
         </a-menu-item>
@@ -33,6 +33,7 @@
 
 <script>
 import { Modal } from 'ant-design-vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AvatarDropdown',
@@ -45,6 +46,19 @@ export default {
       type: Boolean,
       default: true
     }
+  },
+  data () {
+    return {
+      isAdmin: false
+    }
+  },
+  computed: {
+    ...mapState({
+      roles: state => state.user.roles
+    })
+  },
+  created () {
+    this.isAdmin = this.roles.includes('admin')
   },
   methods: {
     handleToSettings () {

@@ -18,45 +18,45 @@ export const asyncRouterMap = [
         path: '/workspace',
         name: 'Workspace',
         component: () => import('@/views/workspace/Workspace'),
-        meta: { title: 'menu.workspace', keepAlive: true, icon: 'build' }
+        meta: { title: 'menu.workspace', keepAlive: true, icon: 'build', roles: ['admin', 'user'] }
       },
       {
         path: '/dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/Dashboard'),
-        meta: { title: 'menu.dashboard', keepAlive: true, icon: 'dashboard' }
+        meta: { title: 'menu.dashboard', keepAlive: true, icon: 'dashboard', roles: ['admin', 'user'] }
       },
       {
         path: '/chart',
         name: 'Chart',
-        meta: { title: 'menu.chart', keepAlive: true, icon: 'bar-chart' }
+        meta: { title: 'menu.chart', keepAlive: true, icon: 'bar-chart', roles: ['admin', 'user'] }
       },
       {
         path: '/project',
         name: 'Project',
-        meta: { title: 'menu.project', keepAlive: true, icon: 'apartment' }
+        meta: { title: 'menu.project', keepAlive: true, icon: 'apartment', roles: ['admin', 'user'] }
       },
       {
         path: '/algo',
         name: 'Algo',
         redirect: '/algo/manage',
         component: RouteView,
-        meta: { title: 'menu.algo', keepAlive: true, icon: 'appstore' },
+        meta: { title: 'menu.algo', keepAlive: true, icon: 'appstore', roles: ['admin', 'user'] },
         children: [
           {
             path: '/algo/manage',
             name: 'Component',
-            meta: { title: 'menu.algo.manage', keepAlive: false }
+            meta: { title: 'menu.algo.manage', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/algo/rule',
             name: 'Rule',
-            meta: { title: 'menu.algo.rule', keepAlive: false }
+            meta: { title: 'menu.algo.rule', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/algo/valve',
             name: 'Valve',
-            meta: { title: 'menu.algo.valve', keepAlive: false }
+            meta: { title: 'menu.algo.valve', keepAlive: false, roles: ['admin', 'user'] }
           }
         ]
       },
@@ -65,17 +65,17 @@ export const asyncRouterMap = [
         name: 'Data',
         redirect: '/data/datasource',
         component: RouteView,
-        meta: { title: 'menu.data', keepAlive: true, icon: 'database' },
+        meta: { title: 'menu.data', keepAlive: true, icon: 'database', roles: ['admin', 'user'] },
         children: [
           {
             path: '/data/datasource',
             name: 'Datasource',
-            meta: { title: 'menu.data.datasource', keepAlive: false }
+            meta: { title: 'menu.data.datasource', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/data/dataset',
             name: 'Dataset',
-            meta: { title: 'menu.data.dataset', keepAlive: false }
+            meta: { title: 'menu.data.dataset', keepAlive: false, roles: ['admin', 'user'] }
           }
         ]
       },
@@ -85,53 +85,55 @@ export const asyncRouterMap = [
         redirect: '/settings/account',
         component: () => import('@/views/settings/Index'),
         hidden: true,
-        meta: { hideHeader: true, keepAlive: true },
+        meta: { hideHeader: true, keepAlive: true, roles: ['admin', 'user'] },
         children: [
           {
             path: '/settings/account',
             name: 'Account',
-            meta: { title: 'settings.account', keepAlive: false }
+            meta: { title: 'settings.account', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/settings/notification',
             name: 'Notification',
-            meta: { title: 'settings.notification', keepAlive: false }
+            meta: { title: 'settings.notification', keepAlive: false, roles: ['admin', 'user'] }
           }
         ]
       },
       {
         path: '/admin',
         name: 'Admin',
-        hidden: true
+        hidden: true,
+        meta: { roles: ['admin'] }
       },
       {
         path: '/about',
         name: 'About',
-        hidden: true
+        hidden: true,
+        meta: { roles: ['admin', 'user'] }
       },
       {
-        path: '/exception',
-        name: 'exception',
+        path: '/error',
+        name: 'error',
         component: RouteView,
-        redirect: '/exception/404',
+        redirect: '/error/404',
         hidden: true,
         children: [
           {
-            path: '/exception/403',
+            path: '/error/403',
             name: '403',
-            component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/403'),
+            component: () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
             meta: { title: '403' }
           },
           {
-            path: '/exception/404',
+            path: '/error/404',
             name: '404',
-            component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/404'),
+            component: () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
             meta: { title: '404' }
           },
           {
-            path: '/exception/500',
+            path: '/error/500',
             name: '500',
-            component: () => import(/* webpackChunkName: "exception" */ '@/views/exception/500'),
+            component: () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
             meta: { title: '500' }
           }
         ]
@@ -140,7 +142,7 @@ export const asyncRouterMap = [
   },
   {
     path: '*',
-    redirect: '/exception',
+    redirect: '/error',
     hidden: true
   }
 ]

@@ -7,6 +7,7 @@ import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'
+import { timeFix } from '@/utils/util'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -29,12 +30,11 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
-            const roles = res.result && res.result.role
+            const roles = res.data && res.data.roles
             // generate dynamic router
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表
               // 动态添加可访问路由表
-              // VueRouter@3.5.0+ New API
               resetRouter()
               store.getters.addRouters.forEach(r => {
                 router.addRoute(r)
@@ -47,6 +47,12 @@ router.beforeEach((to, from, next) => {
               } else {
                 // 跳转到目的路由
                 next({ path: redirect })
+              }
+              if (from.path === loginRoutePath) {
+                notification.success({
+                  message: '欢迎',
+                  description: `${timeFix()}，${res.data.nickname}，欢迎回来`
+                })
               }
             })
           })

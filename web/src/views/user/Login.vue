@@ -67,7 +67,6 @@
 <script>
 import md5 from 'md5'
 import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
 
 export default {
   data () {
@@ -113,21 +112,17 @@ export default {
     loginSuccess (res) {
       console.log(res)
       this.$router.push({ path: '/' })
-      setTimeout(() => {
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      }, 1000)
       this.isLoginError = false
     },
     requestFailed (err) {
-      this.isLoginError = true
-      this.$notification['error']({
-        message: '错误',
-        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-        duration: 4
-      })
+      this.isLoginError = err.response.status === 401 && err.response.data.code === 4011
+      if (!this.isLoginError) {
+        this.$notification['error']({
+          message: '错误',
+          description: ((err.response || {}).data || {}).msg || '请求出现错误，请稍后再试',
+          duration: 4
+        })
+      }
     }
   }
 }
