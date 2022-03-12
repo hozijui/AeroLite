@@ -23,7 +23,7 @@ const errorHandler = async (error) => {
       })
       return Promise.resolve()
     }
-    if (error.response.status === 401 && data.code === 4012) {
+    if (error.response.status === 401 && data.code === 4011) {
       await store.dispatch('RefreshToken')
       const token = storage.get(ACCESS_TOKEN)
       if (token) {

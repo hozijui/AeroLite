@@ -11,3 +11,14 @@ spring:
 
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+jwt:
+  issuer: AeroLite
+  expires_in: 30
+  allow_expires_in: 360

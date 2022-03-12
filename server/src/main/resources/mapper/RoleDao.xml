@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cdipcc.aerolite.server.dao.RoleDao">
+
+    <resultMap type="cn.cdipcc.aerolite.server.entity.Role" id="RoleMap">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RoleMap">
+        select
+          id, role, name, description, create_time, modify_time, enabled
+        from sys_role
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="RoleMap">
+        select
+          id, role, name, description, create_time, modify_time, enabled
+        from sys_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="role != null and role != ''">
+                and role = #{role}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                and modify_time = #{modifyTime}
+            </if>
+            <if test="enabled != null">
+                and enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="role != null and role != ''">
+                and role = #{role}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                and modify_time = #{modifyTime}
+            </if>
+            <if test="enabled != null">
+                and enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(role, name, description, create_time, modify_time, enabled)
+        values (#{role}, #{name}, #{description}, #{createTime}, #{modifyTime}, #{enabled})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(role, name, description, create_time, modify_time, enabled)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.role}, #{entity.name}, #{entity.description}, #{entity.createTime}, #{entity.modifyTime}, #{entity.enabled})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(role, name, description, create_time, modify_time, enabled)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.role}, #{entity.name}, #{entity.description}, #{entity.createTime}, #{entity.modifyTime}, #{entity.enabled})
+        </foreach>
+        on duplicate key update
+        role = values(role),
+        name = values(name),
+        description = values(description),
+        create_time = values(create_time),
+        modify_time = values(modify_time),
+        enabled = values(enabled)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_role
+        <set>
+            <if test="role != null and role != ''">
+                role = #{role},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from sys_role where id = #{id}
+    </delete>
+
+    <resultMap id="RolePermissionMap" type="cn.cdipcc.aerolite.server.dto.RolePermission">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <collection javaType="java.util.ArrayList" ofType="cn.cdipcc.aerolite.server.entity.Permission" property="permissions">
+            <id property="id" column="p_id" jdbcType="BIGINT"/>
+            <result property="permission" column="permission" jdbcType="VARCHAR"/>
+            <result property="name" column="p_name" jdbcType="VARCHAR"/>
+            <result property="method" column="method" jdbcType="VARCHAR"/>
+            <result property="description" column="p_description" jdbcType="VARCHAR"/>
+            <result property="createTime" column="p_create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="p_modify_time" jdbcType="TIMESTAMP"/>
+            <result property="enabled" column="p_enabled" jdbcType="INTEGER"/>
+            <result property="uri" column="uri" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="getPermissionByRole" resultMap="RolePermissionMap">
+        select
+            r.id,
+            r.role,
+            r.name,
+            r.description,
+            r.create_time,
+            r.modify_time,
+            r.enabled,
+
+            p.id as p_id,
+            p.permission,
+            p.name as p_name,
+            p.description as p_description,
+            p.create_time as p_create_time,
+            p.modify_time as p_modify_time,
+            p.enabled as p_enabled,
+            p.method,
+            p.uri
+        from sys_role as r
+        left join sys_role_permission as rp on r.id = rp.role_id
+        left join sys_permission as p on rp.permission_id = p.id
+        where r.role = #{role};
+    </select>
+
+</mapper>
+

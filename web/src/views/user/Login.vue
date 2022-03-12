@@ -115,7 +115,7 @@ export default {
       this.isLoginError = false
     },
     requestFailed (err) {
-      this.isLoginError = err.response.status === 401 && err.response.data.code === 4011
+      this.isLoginError = err.response.status === 401 && err.response.data.code === 4012
       if (!this.isLoginError) {
         this.$notification['error']({
           message: '错误',
