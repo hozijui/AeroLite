@@ -4,6 +4,8 @@ import cn.cdipcc.aerolite.server.dto.UserInfo;
 import cn.cdipcc.aerolite.server.dto.UserRole;
 import cn.cdipcc.aerolite.server.entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.List;
 
 /**
@@ -32,6 +34,6 @@ public interface UserDao {
 
     UserRole getRolesByUsername(String username);
 
-    UserInfo getUserInfo(String username);
+    UserInfo getUserInfo(UserDetails userDetails);
 }
 

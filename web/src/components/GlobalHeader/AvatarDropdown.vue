@@ -58,7 +58,7 @@ export default {
     })
   },
   created () {
-    this.isAdmin = this.roles.includes('admin')
+    this.isAdmin = this.roles.map(role => role.id).includes('admin')
   },
   methods: {
     handleToSettings () {

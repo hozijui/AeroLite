@@ -16,9 +16,9 @@ public class SecurityEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        response.setStatus(401);
         response.setContentType("application/json; charset=utf-8");
         ResultCode resultCode = authException instanceof BadCredentialsException ? ResultCode.LOGIN_ERROR : ResultCode.INVALID_TOKEN;
+        response.setStatus(resultCode.status);
         mapper.writeValue(response.getWriter(), new ApiResult<Void>(resultCode));
     }
 }

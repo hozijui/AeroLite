@@ -90,11 +90,19 @@ export const asyncRouterMap = [
           {
             path: '/settings/account',
             name: 'Account',
+            component: () => import('@/views/settings/Account'),
             meta: { title: 'settings.account', keepAlive: false, roles: ['admin', 'user'] }
+          },
+          {
+            path: '/settings/audit',
+            name: 'UserAudit',
+            component: () => import('@/views/settings/UserAudit'),
+            meta: { title: 'settings.audit', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/settings/notification',
             name: 'Notification',
+            component: () => import('@/views/settings/Notification'),
             meta: { title: 'settings.notification', keepAlive: false, roles: ['admin', 'user'] }
           }
         ]

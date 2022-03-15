@@ -34,7 +34,6 @@ const errorHandler = async (error) => {
             window.location.reload()
           }, 1500)
         })
-        return Promise.resolve()
       }
     }
   }

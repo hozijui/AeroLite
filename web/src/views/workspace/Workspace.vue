@@ -9,7 +9,7 @@
           <div class="content-title">
             {{ timeFix }}，{{ nickname }}<span class="welcome-text">，{{ welcome }}</span>
           </div>
-          <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
+          <div>{{ department }}</div>
         </div>
       </div>
     </template>
@@ -47,11 +47,9 @@ export default {
   computed: {
     ...mapState({
       nickname: state => state.user.nickname,
-      welcome: state => state.user.welcome
-    }),
-    userInfo () {
-      return this.$store.getters.userInfo
-    }
+      welcome: state => state.user.welcome,
+      department: state => state.user.department
+    })
   },
   created () {},
   mounted () {},

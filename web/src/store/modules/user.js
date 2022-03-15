@@ -1,5 +1,6 @@
 import storage from 'store'
-import { login, getInfo, logout, refresh } from '@/api/auth'
+import { login, logout, refresh } from '@/api/auth'
+import { getInfo } from '@/api/account'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
@@ -8,6 +9,7 @@ const user = {
     token: '',
     refresh_token: '',
     nickname: '',
+    department: '',
     welcome: '',
     roles: [],
     permissions: [],
@@ -24,6 +26,9 @@ const user = {
     SET_NICKNAME: (state, { nickname, welcome }) => {
       state.nickname = nickname
       state.welcome = welcome
+    },
+    SET_DEPARTMENT: (state, department) => {
+      state.department = department
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -81,6 +86,7 @@ const user = {
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
+          commit('SET_DEPARTMENT', result.department)
           commit('SET_NICKNAME', { nickname: result.nickname, welcome: welcome() })
           resolve(response)
         }).catch(error => {

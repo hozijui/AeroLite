@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ApiResult<Void> logout() {
         authService.logout();
-        return ApiResult.success(null);
+        return ApiResult.success();
     }
 
     @ApiOperation("刷新Token")

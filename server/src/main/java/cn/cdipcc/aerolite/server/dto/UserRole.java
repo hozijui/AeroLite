@@ -20,6 +20,8 @@ public class UserRole implements Serializable {
 
     private String nickname;
 
+    private String department;
+
     private Date createTime;
 
     private Date modifyTime;

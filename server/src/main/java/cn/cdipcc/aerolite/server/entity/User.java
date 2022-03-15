@@ -29,6 +29,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
+    @ApiModelProperty(value = "部门职位")
+    private String department;
+
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 

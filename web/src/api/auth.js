@@ -6,8 +6,7 @@ const authApi = {
   Logout: '/auth/logout',
   RefreshToken: '/auth/refresh',
   ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  UserInfo: '/user/info'
+  Register: '/auth/register'
 }
 
 export function login (parameter) {
@@ -17,16 +16,6 @@ export function login (parameter) {
     data: qs.stringify(parameter),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-    }
-  })
-}
-
-export function getInfo () {
-  return request({
-    url: authApi.UserInfo,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
     }
   })
 }

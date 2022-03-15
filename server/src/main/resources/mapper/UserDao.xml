@@ -7,6 +7,7 @@
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
         <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
@@ -16,14 +17,14 @@
     <!--查询单个-->
     <select id="queryById" resultMap="UserMap">
         select
-          id, username, password, nickname, create_time, modify_time, last_login, enabled
+          id, username, password, nickname, department, create_time, modify_time, last_login, enabled
         from sys_user
         where id = #{id}
     </select>
 
     <select id="queryByUsername" resultMap="UserMap">
         select
-            id, username, password, nickname, create_time, modify_time, last_login, enabled
+            id, username, password, nickname, department, create_time, modify_time, last_login, enabled
         from sys_user
         where username = #{username}
     </select>
@@ -31,7 +32,7 @@
     <!--查询指定行数据-->
     <select id="queryAll" resultMap="UserMap">
         select
-          id, username, password, nickname, create_time, modify_time, last_login, enabled
+          id, username, password, nickname, department, create_time, modify_time, last_login, enabled
         from sys_user
         <where>
             <if test="id != null">
@@ -45,6 +46,9 @@
             </if>
             <if test="nickname != null and nickname != ''">
                 and nickname = #{nickname}
+            </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
             </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
@@ -78,6 +82,9 @@
             <if test="nickname != null and nickname != ''">
                 and nickname = #{nickname}
             </if>
+            <if test="department != null and department != ''">
+                and department = #{department}
+            </if>
             <if test="createTime != null">
                 and create_time = #{createTime}
             </if>
@@ -95,28 +102,29 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into sys_user(username, password, nickname, create_time, modify_time, last_login, enabled)
-        values (#{username}, #{password}, #{nickname}, #{createTime}, #{modifyTime}, #{lastLogin}, #{enabled})
+        insert into sys_user(username, password, nickname, department, create_time, modify_time, last_login, enabled)
+        values (#{username}, #{password}, #{nickname}, #{department}, #{createTime}, #{modifyTime}, #{lastLogin}, #{enabled})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into sys_user(username, password, nickname, create_time, modify_time, last_login, enabled)
+        insert into sys_user(username, password, nickname, department, create_time, modify_time, last_login, enabled)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.username}, #{entity.password}, #{entity.nickname}, #{entity.createTime}, #{entity.modifyTime}, #{entity.lastLogin}, #{entity.enabled})
+        (#{entity.username}, #{entity.password}, #{entity.nickname}, #{entity.department}, #{entity.createTime}, #{entity.modifyTime}, #{entity.lastLogin}, #{entity.enabled})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into sys_user(username, password, nickname, create_time, modify_time, last_login, enabled)
+        insert into sys_user(username, password, nickname, department, create_time, modify_time, last_login, enabled)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.username}, #{entity.password}, #{entity.nickname}, #{entity.createTime}, #{entity.modifyTime}, #{entity.lastLogin}, #{entity.enabled})
+            (#{entity.username}, #{entity.password}, #{entity.nickname}, #{entity.department}, #{entity.createTime}, #{entity.modifyTime}, #{entity.lastLogin}, #{entity.enabled})
         </foreach>
         on duplicate key update
         username = values(username),
         password = values(password),
         nickname = values(nickname),
+        department = values(department),
         create_time = values(create_time),
         modify_time = values(modify_time),
         last_login = values(last_login),
@@ -135,6 +143,9 @@
             </if>
             <if test="nickname != null and nickname != ''">
                 nickname = #{nickname},
+            </if>
+            <if test="department != null and department != ''">
+                department = #{department},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime},
@@ -162,6 +173,7 @@
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
         <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
@@ -183,6 +195,7 @@
             u.username,
             u.password,
             u.nickname,
+            u.department,
             u.create_time,
             u.modify_time,
             u.last_login,
@@ -205,12 +218,14 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
         <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
         <result property="enabled" column="enabled" jdbcType="INTEGER"/>
-        <collection javaType="java.util.Set" ofType="java.lang.String" property="roles">
-            <result property="role" column="role" jdbcType="VARCHAR"/>
+        <collection javaType="java.util.Set" ofType="cn.cdipcc.aerolite.server.dto.UserInfo$SimpleRole" property="roles">
+            <result property="id" column="role" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
         </collection>
         <collection javaType="java.util.Set" ofType="java.lang.String" property="permissions">
             <result property="permission" column="permission" jdbcType="VARCHAR"/>
@@ -222,18 +237,27 @@
             u.id,
             u.username,
             u.nickname,
+            u.department,
             u.create_time,
             u.modify_time,
             u.last_login,
             u.enabled,
             r.role,
+            r.name,
             p.permission
         from sys_user as u
         left join sys_user_role as ur on u.id = ur.user_id
         left join sys_role as r on ur.role_id = r.id
         left join sys_role_permission as rp on r.id = rp.role_id
         left join sys_permission as p on rp.permission_id = p.id
-        where u.username = #{username};
+        <where>
+            <if test="username != null and username !=''">
+                and u.username = #{username}
+            </if>
+            <if test="id != null and id !=''">
+                and u.id = #{id}
+            </if>
+        </where>
     </select>
 
 </mapper>

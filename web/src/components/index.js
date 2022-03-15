@@ -25,6 +25,7 @@ import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
 
+import PasswordStrengthBar from '@/components/PasswordStrengthBar'
 import Dialog from '@/components/Dialog'
 
 export {
@@ -52,5 +53,6 @@ export {
   StandardFormRow,
   ArticleListContent,
 
+  PasswordStrengthBar,
   Dialog
 }

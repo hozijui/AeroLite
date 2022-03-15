@@ -16,6 +16,8 @@ public class UserInfo implements Serializable {
 
     private String nickname;
 
+    private String department;
+
     private Date createTime;
 
     private Date modifyTime;
@@ -24,7 +26,14 @@ public class UserInfo implements Serializable {
 
     private Integer enabled;
 
-    private Set<String> roles;
+    private Set<SimpleRole> roles;
 
     private Set<String> permissions;
+
+    @Data
+    static class SimpleRole {
+        private String id;
+
+        private String name;
+    }
 }

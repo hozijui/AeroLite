@@ -15,7 +15,7 @@ public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        response.setStatus(403);
+        response.setStatus(ResultCode.ACCESS_DENIED.status);
         response.setContentType("application/json; charset=utf-8");
         mapper.writeValue(response.getWriter(), new ApiResult<Void>(ResultCode.ACCESS_DENIED));
     }

@@ -1,7 +1,6 @@
 package cn.cdipcc.aerolite.server.controller;
 
 import cn.cdipcc.aerolite.server.dto.ApiResult;
-import cn.cdipcc.aerolite.server.dto.UserInfo;
 import cn.cdipcc.aerolite.server.entity.User;
 import cn.cdipcc.aerolite.server.service.UserService;
 import com.github.pagehelper.PageInfo;
@@ -53,12 +52,6 @@ public class UserController {
     @DeleteMapping()
     public ApiResult<Boolean> deleteById(Long id) {
         return ApiResult.success(this.userService.deleteById(id));
-    }
-
-    @ApiOperation("获取当前用户信息")
-    @GetMapping("info")
-    public ApiResult<UserInfo> getUserInfo() {
-        return ApiResult.success(this.userService.getUserInfo());
     }
 }
 

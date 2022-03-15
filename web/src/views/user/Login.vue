@@ -52,14 +52,6 @@
           :disabled="state.loginBtn"
         >{{ $t('user.login.login') }}</a-button>
       </a-form-item>
-
-      <a-form-item>
-        <router-link
-          :to="{ name: 'login' }"
-          class="forge-password"
-          style="float: right;"
-        >{{ $t('user.login.forgot-password') }}</router-link>
-      </a-form-item>
     </a-form>
   </div>
 </template>
@@ -82,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['Login', 'Logout']),
+    ...mapActions(['Login']),
     handleSubmit (e) {
       e.preventDefault()
       const { form: { validateFields }, state, Login } = this
@@ -91,7 +83,6 @@ export default {
 
       validateFields(['username', 'password'], { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values }
           delete loginParams.username
           loginParams.username = values.username
@@ -110,12 +101,11 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
       this.$router.push({ path: '/' })
       this.isLoginError = false
     },
     requestFailed (err) {
-      this.isLoginError = err.response.status === 401 && err.response.data.code === 4012
+      this.isLoginError = err.response.status === 401 && err.response.data.code === 4013
       if (!this.isLoginError) {
         this.$notification['error']({
           message: '错误',

@@ -1,5 +1,6 @@
 package cn.cdipcc.aerolite.server.service.impl;
 
+import cn.cdipcc.aerolite.server.common.ResultCode;
 import cn.cdipcc.aerolite.server.dao.RoleDao;
 import cn.cdipcc.aerolite.server.dao.UserDao;
 import cn.cdipcc.aerolite.server.dto.AuthInfo;
@@ -8,6 +9,7 @@ import cn.cdipcc.aerolite.server.dto.UserRole;
 import cn.cdipcc.aerolite.server.config.security.AuthUser;
 import cn.cdipcc.aerolite.server.entity.Permission;
 import cn.cdipcc.aerolite.server.entity.User;
+import cn.cdipcc.aerolite.server.exception.CustomException;
 import cn.cdipcc.aerolite.server.service.AuthService;
 import cn.cdipcc.aerolite.server.utils.JwtUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -107,12 +109,13 @@ public class AuthServiceImpl implements AuthService {
         if (decodedToken != null) {
             String username = decodedToken.getSubject();
             User user = userDao.queryByUsername(username);
+            if (user.getLastLogin() == null) throw new CustomException(ResultCode.INVALID_REFRESH_TOKEN);
             String secretKey = jwtUtil.genSecretKey(user.getLastLogin());
             if (jwtUtil.verify(secretKey, refreshToken, true)) {
                 return new AuthInfo(jwtUtil.refreshToken(secretKey, decodedToken), refreshToken);
             }
         }
-        return null;
+        throw new CustomException(ResultCode.INVALID_REFRESH_TOKEN);
     }
 
     private boolean registered(HttpServletRequest request) {

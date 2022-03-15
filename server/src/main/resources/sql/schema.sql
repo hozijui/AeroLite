@@ -4,6 +4,7 @@ CREATE TABLE `sys_user` (
     `username` varchar(32) NOT NULL COMMENT '用户名',
     `password` varchar(100) NOT NULL COMMENT '密码',
     `nickname` varchar(100) NOT NULL COMMENT '昵称',
+    `department` varchar(255) DEFAULT NULL COMMENT '部门职位',
     `create_time` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
     `last_login` datetime DEFAULT NULL COMMENT '最近登录时间',

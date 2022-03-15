@@ -15,6 +15,11 @@
                 {{ $t('settings.account') }}
               </router-link>
             </a-menu-item>
+            <a-menu-item key="/settings/audit">
+              <router-link :to="{ name: 'UserAudit' }">
+                {{ $t('settings.audit') }}
+              </router-link>
+            </a-menu-item>
             <a-menu-item key="/settings/notification">
               <router-link :to="{ name: 'Notification' }">
                 {{ $t('settings.notification') }}

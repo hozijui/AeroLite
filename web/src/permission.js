@@ -56,7 +56,8 @@ router.beforeEach((to, from, next) => {
               }
             })
           })
-          .catch(() => {
+          .catch((error) => {
+            if (error.response.status === 401 && error.response.data.code === 4011) return
             notification.error({
               message: '错误',
               description: '请求用户信息失败，请重试'

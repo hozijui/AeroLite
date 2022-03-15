@@ -23,4 +23,8 @@ public interface UserService {
     boolean deleteById(Long id);
 
     UserInfo getUserInfo();
+
+    UserInfo updateInfo(User user);
+
+    void updatePassword(String origin, String password, String confirm);
 }
