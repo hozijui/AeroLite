@@ -32,7 +32,9 @@ public class UserInfo implements Serializable {
 
     @Data
     static class SimpleRole {
-        private String id;
+        private Long id;
+
+        private String role;
 
         private String name;
     }

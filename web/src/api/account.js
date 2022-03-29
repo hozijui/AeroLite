@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 import qs from 'qs'
 
-const userApi = {
+const accountApi = {
   UserInfo: '/account/info',
   ModifyPassword: '/account/password'
 }
 
 export function getInfo () {
   return request({
-    url: userApi.UserInfo,
+    url: accountApi.UserInfo,
     method: 'get',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
@@ -18,7 +18,7 @@ export function getInfo () {
 
 export function updateInfo (payload) {
   return request({
-    url: userApi.UserInfo,
+    url: accountApi.UserInfo,
     method: 'patch',
     data: qs.stringify(payload),
     headers: {
@@ -29,7 +29,7 @@ export function updateInfo (payload) {
 
 export function modifyPassword (payload) {
   return request({
-    url: userApi.ModifyPassword,
+    url: accountApi.ModifyPassword,
     method: 'put',
     data: qs.stringify(payload),
     headers: {

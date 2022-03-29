@@ -1,7 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
 import storage from 'store'
-import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
@@ -16,13 +15,6 @@ const request = axios.create({
 const errorHandler = async (error) => {
   if (error.response) {
     const data = error.response.data
-    if (error.response.status === 403) {
-      notification.error({
-        message: 'Forbidden',
-        description: data.msg
-      })
-      return Promise.resolve()
-    }
     if (error.response.status === 401 && data.code === 4011) {
       await store.dispatch('RefreshToken')
       const token = storage.get(ACCESS_TOKEN)

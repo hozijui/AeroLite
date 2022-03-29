@@ -91,27 +91,43 @@ export const asyncRouterMap = [
             path: '/settings/account',
             name: 'Account',
             component: () => import('@/views/settings/Account'),
-            meta: { title: 'settings.account', keepAlive: false, roles: ['admin', 'user'] }
+            meta: { title: 'menu.settings.account', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/settings/audit',
             name: 'UserAudit',
             component: () => import('@/views/settings/UserAudit'),
-            meta: { title: 'settings.audit', keepAlive: false, roles: ['admin', 'user'] }
+            meta: { title: 'menu.settings.audit', keepAlive: false, roles: ['admin', 'user'] }
           },
           {
             path: '/settings/notification',
             name: 'Notification',
             component: () => import('@/views/settings/Notification'),
-            meta: { title: 'settings.notification', keepAlive: false, roles: ['admin', 'user'] }
+            meta: { title: 'menu.settings.notification', keepAlive: false, roles: ['admin', 'user'] }
           }
         ]
       },
       {
         path: '/admin',
         name: 'Admin',
+        redirect: '/admin/user',
+        component: () => import('@/views/admin/Index'),
         hidden: true,
-        meta: { roles: ['admin'] }
+        meta: { hideHeader: true, keepAlive: true, roles: ['admin'] },
+        children: [
+          {
+            path: '/admin/user',
+            name: 'User',
+            component: () => import('@/views/admin/User'),
+            meta: { title: 'menu.admin.user', keepAlive: false, roles: ['admin'] }
+          },
+          {
+            path: '/admin/audit',
+            name: 'AdminAudit',
+            component: () => import('@/views/admin/AdminAudit'),
+            meta: { title: 'menu.admin.audit', keepAlive: false, roles: ['admin'] }
+          }
+        ]
       },
       {
         path: '/about',

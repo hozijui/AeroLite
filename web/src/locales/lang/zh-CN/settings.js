@@ -1,7 +1,4 @@
 export default {
-  'settings.account': '账户设置',
-  'settings.audit': '审计日志',
-  'settings.notification': '消息通知',
   'settings.account.username': '账户名称',
   'settings.account.password': '账户密码',
   'settings.account.password.modify': '修改密码',

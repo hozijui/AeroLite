@@ -1,6 +1,5 @@
 package cn.cdipcc.aerolite.server.dto;
 
-import cn.cdipcc.aerolite.server.entity.Permission;
 import cn.cdipcc.aerolite.server.entity.Role;
 import lombok.Data;
 

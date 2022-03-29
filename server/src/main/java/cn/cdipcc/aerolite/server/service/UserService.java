@@ -14,11 +14,13 @@ public interface UserService {
 
     User queryByUsername(String username);
 
-    PageInfo<User> queryByPage(Integer page, Integer limit);
+    PageInfo<UserInfo> queryByPage(Integer page, Integer limit, String orderBy, User user);
 
-    User insert(User user);
+    User insert(User user, Long roleId);
 
-    User update(User user);
+    User update(User user, Long roleId);
+
+    void updatePassword(Long id, String password, String confirm);
 
     boolean deleteById(Long id);
 

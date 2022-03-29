@@ -18,7 +18,7 @@ public interface UserDao {
 
     User queryByUsername(String username);
 
-    List<User> queryAll();
+    List<UserInfo> queryAll(User user);
 
     long count(User user);
 
@@ -31,6 +31,10 @@ public interface UserDao {
     int update(User user);
 
     int deleteById(Long id);
+
+    int insertUserRole(@Param("user_id") Long userId, @Param("role_id") Long roleId);
+
+    int deleteUserRole(Long id);
 
     UserRole getRolesByUsername(String username);
 

@@ -14,8 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,25 +46,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<User> queryByPage(Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
-        List<User> userList = this.userDao.queryAll();
-        return new PageInfo<>(userList);
+    public PageInfo<UserInfo> queryByPage(Integer page, Integer limit, String orderBy, User user) {
+        PageHelper.startPage(page, limit, orderBy);
+        List<UserInfo> userInfoList = this.userDao.queryAll(user);
+        return new PageInfo<>(userInfoList);
     }
 
     @Override
-    public User insert(User user) {
+    @Transactional
+    public User insert(User user, Long roleId) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         this.userDao.insert(user);
+        this.userDao.insertUserRole(user.getId(), roleId);
         return user;
     }
 
     @Override
-    public User update(User user) {
+    @Transactional
+    public User update(User user, Long roleId) {
         this.userDao.update(user);
+        this.userDao.deleteUserRole(user.getId());
+        this.userDao.insertUserRole(user.getId(), roleId);
         return this.queryById(user.getId());
     }
 
     @Override
+    public void updatePassword(Long id, String password, String confirm) {
+        if (!password.equals(confirm)) {
+            throw new CustomException(ResultCode.BAD_REQUEST);
+        }
+        User user = new User();
+        user.setId(id);
+        user.setPassword(passwordEncoder.encode(password));
+        this.userDao.update(user);
+    }
+
+    @Override
+    @Transactional
     public boolean deleteById(Long id) {
         return this.userDao.deleteById(id) > 0;
     }
@@ -71,18 +91,17 @@ public class UserServiceImpl implements UserService {
     public UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = ((UserDetails) authentication.getPrincipal());
-        UserInfo userInfo = userDao.getUserInfo(userDetails);
-        Set<String> permissions = userInfo.getPermissions().stream().filter(p -> p.contains(":")).collect(Collectors.toSet());
-        userInfo.setPermissions(permissions);
-        return userInfo;
+        return userDao.getUserInfo(userDetails);
     }
 
     @Override
+    @Transactional
     public UserInfo updateInfo(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = ((UserDetails) authentication.getPrincipal());
         Long id = ((AuthUser) userDetails).getId();
         if (id.equals(user.getId())) {
+            user.setModifyTime(new Date());
             this.userDao.update(user);
             UserInfo userInfo = this.userDao.getUserInfo(userDetails);
             Set<String> permissions = userInfo.getPermissions().stream().filter(p -> p.contains(":")).collect(Collectors.toSet());
@@ -100,7 +119,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ResultCode.LOGIN_ERROR);
         }
         if (!password.equals(confirm)) {
-            throw new CustomException(ResultCode.FAIL);
+            throw new CustomException(ResultCode.BAD_REQUEST);
         }
         User user = new User();
         user.setId(((AuthUser) userDetails).getId());

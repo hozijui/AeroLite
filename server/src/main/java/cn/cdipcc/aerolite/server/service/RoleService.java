@@ -1,7 +1,7 @@
 package cn.cdipcc.aerolite.server.service;
 
 import cn.cdipcc.aerolite.server.entity.Role;
-import com.github.pagehelper.PageInfo;
+import java.util.List;
 
 /**
  * 角色表(Role)服务接口
@@ -11,11 +11,5 @@ import com.github.pagehelper.PageInfo;
 public interface RoleService {
     Role queryById(Long id);
 
-    PageInfo<Role> queryByPage(Integer page, Integer limit);
-
-    Role insert(Role role);
-
-    Role update(Role role);
-
-    boolean deleteById(Long id);
+    List<Role> queryAll();
 }

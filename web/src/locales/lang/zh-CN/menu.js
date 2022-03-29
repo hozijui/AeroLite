@@ -15,5 +15,10 @@ export default {
     'menu.settings': '个人设置',
     'menu.admin': '系统管理',
     'menu.about': '关于',
-    'menu.logout': '退出登录'
+    'menu.logout': '退出登录',
+    'menu.settings.account': '账户设置',
+    'menu.settings.audit': '操作日志',
+    'menu.settings.notification': '消息通知',
+    'menu.admin.user': '用户管理',
+    'menu.admin.audit': '日志审计'
 }

@@ -108,7 +108,7 @@ export default {
       this.isLoginError = err.response.status === 401 && err.response.data.code === 4013
       if (!this.isLoginError) {
         this.$notification['error']({
-          message: '错误',
+          message: '登录失败',
           description: ((err.response || {}).data || {}).msg || '请求出现错误，请稍后再试',
           duration: 4
         })

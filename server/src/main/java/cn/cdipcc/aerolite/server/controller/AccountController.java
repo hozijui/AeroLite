@@ -10,23 +10,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Api(tags = "个人信息管理")
+@Api(tags = "账户信息管理")
 @RestController
 @RequestMapping("api/account")
 public class AccountController {
     @Resource
     private UserService userService;
 
-    @ApiOperation("获取当前账户信息")
+    @ApiOperation("获取账户信息")
     @GetMapping("info")
     public ApiResult<UserInfo> getUserInfo() {
         return ApiResult.success(this.userService.getUserInfo());
     }
 
-    @ApiOperation("修改当前账户信息")
+    @ApiOperation("修改账户信息")
     @PatchMapping("info")
     public ApiResult<UserInfo> updateInfo(User user) {
-        UserInfo userInfo = this.userService.updateInfo(user);
         return ApiResult.success(this.userService.updateInfo(user));
     }
 

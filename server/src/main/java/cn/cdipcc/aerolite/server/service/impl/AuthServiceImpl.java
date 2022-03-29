@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -65,15 +66,14 @@ public class AuthServiceImpl implements AuthService {
     public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
         if (!registered(request)) return true;
         if (authentication.getPrincipal() instanceof UserDetails) {
-            String method = request.getMethod();
-            String uri = request.getRequestURI();
             for (GrantedAuthority authority : authentication.getAuthorities()) {
                 String roleName = authority.getAuthority().substring(5);
                 RolePermission rolePermission = roleDao.getPermissionByRole(roleName);
                 for (Permission permission : rolePermission.getPermissions()) {
-                    if (method.equalsIgnoreCase(permission.getMethod()) && uri.equals(permission.getUri())) {
-                        return true;
-                    }
+                    String uri = permission.getUri();
+                    String method = permission.getMethod();
+                    AntPathRequestMatcher matcher = new AntPathRequestMatcher(uri, method);
+                    if (matcher.matches(request)) return true;
                 }
             }
         }
@@ -81,6 +81,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AuthInfo login(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);

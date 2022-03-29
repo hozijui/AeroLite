@@ -7,6 +7,7 @@ import VueCropper from 'vue-cropper'
 import 'ant-design-vue/dist/antd.less'
 
 // ext library
+import VueMoment from 'vue-moment'
 import VueClipboard from 'vue-clipboard2'
 import MultiTab from '@/components/MultiTab'
 import PageLoading from '@/components/PageLoading'
@@ -23,5 +24,6 @@ Vue.use(PageLoading)
 Vue.use(VueClipboard)
 Vue.use(PermissionHelper)
 Vue.use(VueCropper)
+Vue.use(VueMoment)
 
 process.env.NODE_ENV !== 'production' && console.warn('[antd-pro] WARNING: Antd now use fulled imported.')

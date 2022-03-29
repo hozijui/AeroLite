@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api
+@Api(tags = "鉴权接口")
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {

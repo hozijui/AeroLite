@@ -5,6 +5,7 @@ import global from './zh-CN/global'
 import menu from './zh-CN/menu'
 import settings from './zh-CN/settings'
 import user from './zh-CN/user'
+import admin from './zh-CN/admin'
 import dashboard from './zh-CN/dashboard'
 
 const components = {
@@ -23,5 +24,6 @@ export default {
   ...menu,
   ...settings,
   ...user,
+  ...admin,
   ...dashboard
 }

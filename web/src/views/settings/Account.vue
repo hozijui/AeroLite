@@ -7,7 +7,7 @@
           <a-form-item :label="$t('settings.account.username')">
             <a-input :value="userInfo.username" disabled />
           </a-form-item>
-          <a-form-item :label="$t('settings.account.password')">
+          <a-form-item :label="$t('settings.account.password')" v-action="'account:password'">
             <a-button type="link" id="modify-password-btn" @click="toggleModal">
               {{ $t('settings.account.password.modify') }}
             </a-button>

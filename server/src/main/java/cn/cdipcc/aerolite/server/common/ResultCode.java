@@ -17,6 +17,8 @@ public enum ResultCode {
 
     LOGIN_ERROR(401, 4013, "账户或密码错误"),
 
+    DISABLED_USER(401, 4014, "该账户已被禁用，请联系管理员"),
+
     ACCESS_DENIED(403, 4003, "无权限"),
 
     UNKNOWN_ERROR(500, 5000, "未知错误");

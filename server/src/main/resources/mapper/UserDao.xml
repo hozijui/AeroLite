@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.cdipcc.aerolite.server.dao.UserDao">
 
-    <resultMap type="cn.cdipcc.aerolite.server.entity.User" id="UserMap">
+    <resultMap id="UserMap" type="cn.cdipcc.aerolite.server.entity.User">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -12,6 +12,48 @@
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
         <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
         <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="UserInfoMap" type="cn.cdipcc.aerolite.server.dto.UserInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <collection javaType="java.util.Set" ofType="cn.cdipcc.aerolite.server.dto.UserInfo$SimpleRole"
+                    property="roles" column="id" select="queryRoleByUserId" />
+        <collection javaType="java.util.Set" ofType="java.lang.String" property="permissions"
+                    column="id" select="queryPermissionByUserId" />
+    </resultMap>
+
+    <resultMap id="UserRoleMap" type="cn.cdipcc.aerolite.server.dto.UserRole">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="department" column="department" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <collection javaType="java.util.ArrayList" ofType="cn.cdipcc.aerolite.server.entity.Role" property="roles">
+            <id property="id" column="r_id" jdbcType="BIGINT"/>
+            <result property="role" column="role" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="createTime" column="r_create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="r_modify_time" jdbcType="TIMESTAMP"/>
+            <result property="enabled" column="r_enabled" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="SimpleRoleMap" type="cn.cdipcc.aerolite.server.dto.UserInfo$SimpleRole">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
@@ -29,8 +71,8 @@
         where username = #{username}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAll" resultMap="UserMap">
+    <!--查询全部（分页）-->
+    <select id="queryAll" resultMap="UserInfoMap">
         select
           id, username, password, nickname, department, create_time, modify_time, last_login, enabled
         from sys_user
@@ -165,99 +207,60 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from sys_user where id = #{id}
+        delete sys_user.*, sys_user_role.*
+        from sys_user, sys_user_role
+        where sys_user.id = #{id} and sys_user_role.user_id = #{id}
     </delete>
 
-    <resultMap id="UserRoleMap" type="cn.cdipcc.aerolite.server.dto.UserRole">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="username" column="username" jdbcType="VARCHAR"/>
-        <result property="password" column="password" jdbcType="VARCHAR"/>
-        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-        <result property="department" column="department" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
-        <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
-        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
-        <collection javaType="java.util.ArrayList" ofType="cn.cdipcc.aerolite.server.entity.Role" property="roles">
-            <id property="id" column="r_id" jdbcType="BIGINT"/>
-            <result property="role" column="role" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="createTime" column="r_create_time" jdbcType="TIMESTAMP"/>
-            <result property="modifyTime" column="r_modify_time" jdbcType="TIMESTAMP"/>
-            <result property="enabled" column="r_enabled" jdbcType="INTEGER"/>
-        </collection>
-    </resultMap>
+    <insert id="insertUserRole" useGeneratedKeys="true">
+        insert into sys_user_role(user_id, role_id)
+        values (#{user_id}, #{role_id})
+    </insert>
+
+    <delete id="deleteUserRole">
+        delete from sys_user_role
+        where sys_user_role.user_id = #{id}
+    </delete>
 
     <select id="getRolesByUsername" resultMap="UserRoleMap">
         select
-            u.id,
-            u.username,
-            u.password,
-            u.nickname,
-            u.department,
-            u.create_time,
-            u.modify_time,
-            u.last_login,
-            u.enabled,
-
-            r.id as r_id,
-            r.role,
-            r.name,
-            r.description,
-            r.create_time as r_create_time,
-            r.modify_time as r_modify_time,
-            r.enabled as r_enabled
+          u.id, u.username, u.password, u.nickname, u.department, u.create_time, u.modify_time, u.last_login, u.enabled,
+          r.id as r_id, r.role, r.name, r.description,
+          r.create_time as r_create_time,
+          r.modify_time as r_modify_time,
+          r.enabled as r_enabled
         from sys_user as u
         left join sys_user_role as ur on u.id = ur.user_id
         left join sys_role as r on ur.role_id = r.id
         where u.username = #{username};
     </select>
 
-    <resultMap id="UserInfoMap" type="cn.cdipcc.aerolite.server.dto.UserInfo">
-        <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="username" column="username" jdbcType="VARCHAR"/>
-        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-        <result property="department" column="department" jdbcType="VARCHAR"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
-        <result property="lastLogin" column="last_login" jdbcType="TIMESTAMP"/>
-        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
-        <collection javaType="java.util.Set" ofType="cn.cdipcc.aerolite.server.dto.UserInfo$SimpleRole" property="roles">
-            <result property="id" column="role" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-        </collection>
-        <collection javaType="java.util.Set" ofType="java.lang.String" property="permissions">
-            <result property="permission" column="permission" jdbcType="VARCHAR"/>
-        </collection>
-    </resultMap>
-
     <select id="getUserInfo" resultMap="UserInfoMap">
         select
-            u.id,
-            u.username,
-            u.nickname,
-            u.department,
-            u.create_time,
-            u.modify_time,
-            u.last_login,
-            u.enabled,
-            r.role,
-            r.name,
-            p.permission
-        from sys_user as u
-        left join sys_user_role as ur on u.id = ur.user_id
-        left join sys_role as r on ur.role_id = r.id
-        left join sys_role_permission as rp on r.id = rp.role_id
-        left join sys_permission as p on rp.permission_id = p.id
+          id, username, password, nickname, department, create_time, modify_time, last_login, enabled
+        from sys_user
         <where>
             <if test="username != null and username !=''">
-                and u.username = #{username}
+                and username = #{username}
             </if>
             <if test="id != null and id !=''">
-                and u.id = #{id}
+                and id = #{id}
             </if>
         </where>
+    </select>
+
+    <select id="queryRoleByUserId" resultMap="SimpleRoleMap">
+        select sys_role.id, role, name from sys_role
+        left join sys_user_role on sys_role.id = sys_user_role.role_id
+        where sys_user_role.user_id = #{id}
+    </select>
+
+    <select id="queryPermissionByUserId" resultType="java.lang.String">
+        select permission from sys_permission
+        left join sys_role_permission on sys_permission.id = sys_role_permission.permission_id
+        left join sys_role on sys_role_permission.role_id = sys_role.id
+        left join sys_user_role on sys_role.id = sys_user_role.role_id
+        where sys_user_role.user_id = #{id}
     </select>
 
 </mapper>
