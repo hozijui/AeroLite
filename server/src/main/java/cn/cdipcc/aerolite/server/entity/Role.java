@@ -13,11 +13,11 @@ import java.io.Serializable;
  * @author hozijui
  */
 @Data
-@ApiModel(description = "角色表")
+@ApiModel(description = "角色")
 public class Role implements Serializable {
     private static final long serialVersionUID = 613970227331300363L;
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "角色id")
     private Long id;
 
     @ApiModelProperty(value = "唯一标识")

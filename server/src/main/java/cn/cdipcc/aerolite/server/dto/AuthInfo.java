@@ -7,9 +7,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@ApiModel
+@ApiModel(description = "鉴权token")
 public class AuthInfo {
+    @ApiModelProperty(value = "Token")
     String token;
 
+    @ApiModelProperty(value = "Refresh Token")
     String refresh_token;
 }

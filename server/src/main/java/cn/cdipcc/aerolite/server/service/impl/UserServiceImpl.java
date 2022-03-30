@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(User user, Long roleId) {
+        user.setModifyTime(new Date());
         this.userDao.update(user);
         this.userDao.deleteUserRole(user.getId());
         this.userDao.insertUserRole(user.getId(), roleId);
