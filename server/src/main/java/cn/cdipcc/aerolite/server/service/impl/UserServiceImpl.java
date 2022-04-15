@@ -83,7 +83,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public boolean deleteById(Long id) {
         return this.userDao.deleteById(id) > 0;
     }

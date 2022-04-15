@@ -38,7 +38,7 @@ public class SwaggerConfig {
         List<SecurityReference> defaultAuth = Lists.newArrayList(new SecurityReference("Authorization", authorizationScopes));
         return Lists.newArrayList(SecurityContext.builder()
                 .securityReferences(defaultAuth)
-                .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                .operationSelector(selector -> selector.requestMappingPattern().matches("^(?!/api/auth/).*$"))
                 .build()
         );
     }
